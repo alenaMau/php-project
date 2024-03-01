@@ -1,0 +1,150 @@
+h2 {
+    color: white;
+    font-size: 32px;
+    padding: 10px;
+}
+
+.url-logout{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.form_title-span {
+    color: white;
+    font-size: 28px;
+    margin-bottom: 25px;
+}
+
+.form_title {
+    color: white;
+    font-size: 28px;
+}
+
+.form_auth {
+    width: 514px;
+    min-height: 540px;
+    max-height: 650px;
+    border-radius: 20px;
+    background-color: #D5D5D5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+
+.btn_other {
+    display: flex;
+    flex-direction: column;
+    height: 439px;
+    gap: 15px;
+    width: 347px;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+
+.services {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 15px;
+    flex-direction: row;
+    max-width: 100%;
+    align-items: center;
+    justify-content: center;
+    height: 1070px;
+}
+
+.auth {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 15px;
+    flex-direction: column;
+    max-width: 100%;
+    align-items: center;
+    justify-content: center;
+    height: 1070px;
+}
+
+
+.form_bth {
+    width: 400px;
+    height: 60px;
+    border-radius: 15px;
+    border: none;
+    margin-top: 22px;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+
+.form_input {
+    width: 400px;
+    height: 60px;
+    border-radius: 15px;
+    border: none;
+
+}
+
+header {
+    min-width: 1410px;
+    height: 80px;   
+    background-color: #A0A0A0;
+    border-radius: 15px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 10px 50px 20px;
+    justify-content: space-between;
+}
+
+.avatar {
+    background-image: url("../img/Group 1.svg");
+    width: 64px;
+    height: 64px;
+    background-repeat: no-repeat;
+}
+
+.btn {
+    background-color: #717171;
+    max-width: 227px;
+    min-width: 194px;
+    min-height: 45px;
+    border-radius: 20px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+footer {
+    min-width: 1440px;
+    min-height: 80px;
+    background-color: #A0A0A0;
+    border-radius: 15px;
+    position: relative; bottom: 0; left: 0;
+}
+
+/*section {*/
+/*    width: 500px;*/
+/*    height: 1070px;*/
+/*    display: flex;*/
+/*    flex-wrap: wrap;*/
+/*    gap: 15px;*/
+/*    margin: 15px;*/
+/*    flex-direction: column;*/
+/*}*/
