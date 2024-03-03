@@ -2,6 +2,7 @@
 
 namespace Controller;
 
+use Illuminate\Database\Query\Expression;
 use Model\Room;
 use Model\Type_of_room;
 use Model\Subdivision;
@@ -12,6 +13,9 @@ use Src\View;
 use Src\Request;
 use Src\Auth\Auth;
 use Model\Type_of_unit;
+use Model\AbonentTelepnone;
+use Throwable;
+use Illuminate\Support\Facades\DB;
 
 class Site
 {
@@ -28,24 +32,32 @@ class Site
      public function home(Request $request): string
      {
           $this->checkAccess();
-          if($request->method ==='POST') {
-               $name = $request->get('name');
-               $surname = $request->get('surname');
-               $patronymic = $request->get('patronymic');
-               $date_of_birth = $request->get('date_of_birth');
-               $id_subdivision = $request->get('id_subdivision');
-               $model = new Abonent();
-               $model->name = $name;
-               $model->surname = $surname;
-               $model->patronymic = $patronymic;
-               $model->date_of_birth = $date_of_birth;
-               $model->id_subdivision = $id_subdivision;
-          } else {
-               ['message' => 'нету'];
-          }
+          return new View('site.home');
+     }
+
+     public function attach_number(Request $request): string
+     {
+          $this->checkAccess();
+          $telephones = Telephone::all();
           $abonents = Abonent::all();
-          $subdivisions = Subdivision::all(); 
-          return new View('site.home',['abonents' => $abonents,'subdivisions' => $subdivisions]);
+          if ($request->method === 'POST') {
+               try {
+                    $abonent = $request->get('abonent');
+                    $id_telephone = $request->get('telephone');
+                    if (empty($abonent) || empty($id_telephone)) {
+                         ['message' => 'Пустые поля'];
+                    }
+                    $model = new AbonentTelepnone();
+                    $model->id_abonent = $abonent;
+                    $model->id_telephone = $id_telephone;
+                    $model->save();
+                    return new View('site.attach_number', ['message' => 'Успешно добавленно', 'telephones' => $telephones, 'abonents' => $abonents]);
+
+               } catch (Throwable $e) {
+                    return new View('site.attach_number', ['message' => 'Такой пользователь уже имеет такой номер', 'telephones' => $telephones, 'abonents' => $abonents]);
+               }
+          }
+          return new View('site.attach_number', ['telephones' => $telephones, 'abonents' => $abonents]);
      }
 
      public function login(Request $request): string
@@ -86,12 +98,12 @@ class Site
                $model->id_subdivision = $id_subdivision;
                if ($model->save()) {
                     return new View('site.rooms', ['message' => 'Успешно добавленно']);
-                    
+
                }
           }
-          $type_of_room = Type_of_room::all();
-          $subdivisions = Subdivision::all();     
-          return new View('site.rooms',['subdivisions' => $subdivisions,'type_of_room' => $type_of_room]);
+          $type_of_rooms = Type_of_room::all();
+          $subdivisions = Subdivision::all();
+          return new View('site.rooms', ['subdivisions' => $subdivisions, 'type_of_rooms' => $type_of_rooms]);
      }
 
      public function abonent(Request $request): string
@@ -114,17 +126,53 @@ class Site
                $model->id_subdivision = $id_subdivision;
                if ($model->save()) {
                     return new View('site.abonent', ['message' => 'Успешно добавленно']);
-                    
+
                } else {
-                    ['message' => ',бля'];
+                    ['message' => ''];
                }
           }
-          $subdivisions = Subdivision::all();     
-          return new View('site.abonent',['subdivisions' => $subdivisions]);
+          $subdivisions = Subdivision::all();
+          return new View('site.abonent', ['subdivisions' => $subdivisions]);
+     }
+
+     public function abonent_all(Request $request): string
+     {    
+          $this->checkAccess();
+          $exp = new Expression('subdivision.name, count(*) as total');
+          $countAbonentSubdivision = Abonent::query()
+          ->select($exp)
+          ->join('subdivision', 'id_subdivision', '=', 'subdivision.id')
+          ->groupBy(['subdivision.name'])
+          ->get();
+
+          $expTwo = new Expression('room.name, count(*) as total');
+          $countAbonentRoom = Abonent::query()
+          ->select($expTwo)
+          ->join('room', 'room.id_subdivision', '=', 'subscriber.id_subdivision')
+          ->groupBy(['room.name'])
+          ->get();
+
+          $abonents = Abonent::all();
+          $type_of_units = Type_of_unit::all();
+          return new View('site.abonent_all', ['abonents' => $abonents, 'subdivisions' => $countAbonentSubdivision, 'rooms' => $countAbonentRoom, 'type_of_units' => $type_of_units]);
      }
 
      public function subdivision(Request $request): string
-     {    
+     {
+          $exp = new Expression('subdivision.name, count(*) as total');
+          $countAbonentSubdivision = Abonent::query()
+          ->select($exp)
+          ->join('subdivision', 'id_subdivision', '=', 'subdivision.id')
+          ->groupBy(['subdivision.name'])
+          ->get();
+
+          $expTwo = new Expression('room.name, count(*) as total');
+          $countAbonentRoom = Abonent::query()
+          ->select($expTwo)
+          ->join('room', 'room.id_subdivision', '=', 'subscriber.id_subdivision')
+          ->groupBy(['room.name'])
+          ->get();
+
           $this->checkAccess();
           if ($request->method === 'POST') {
                $name = $request->get('name');
@@ -137,12 +185,29 @@ class Site
                $model->id_type_of_unit = $type_of_unit;
                if ($model->save()) {
                     return new View('site.subdivision', ['message' => 'Успешно добавленно']);
-                    
+
                }
           }
-          $type_of_unit = Type_of_unit::all();
-          return new View('site.subdivision');
-     }     
+
+          if ($request->method === 'POST') {
+               $name = $request->get('name');
+               $surname = $request->get('surname');
+               $patronymic = $request->get('patronymic');
+               $date_of_birth = $request->get('date_of_birth');
+               $id_subdivision = $request->get('id_subdivision');
+               $model = new Abonent();
+               $model->name = $name;
+               $model->surname = $surname;
+               $model->patronymic = $patronymic;
+               $model->date_of_birth = $date_of_birth;
+               $model->id_subdivision = $id_subdivision;
+          } else {
+               ['message' => 'нету'];
+          }
+          $abonents = Abonent::all();
+          $type_of_units = Type_of_unit::all();
+          return new View('site.subdivision', ['abonents' => $abonents, 'subdivisions' => $countAbonentSubdivision, 'rooms' => $countAbonentRoom, 'type_of_units' => $type_of_units]);
+     }
 
 
      public function phone(Request $request): string
@@ -161,7 +226,7 @@ class Site
                $model->id_subdivision = $subdivision;
                if ($model->save()) {
                     return new View('site.phone', ['message' => 'Успешно добавленно']);
-                    
+
                }
           }
           $subdivisions = Subdivision::all();
@@ -170,7 +235,7 @@ class Site
      }
 
      public function manager(): string
-     {    
+     {
           $this->checkAccess(true);
 
           return new View('site.manager');
@@ -191,7 +256,7 @@ class Site
                $model->id_rol = 2;
                if ($model->save()) {
                     return new View('site.home', ['message' => 'Неправильные логин или пароль']);
-                    
+
                }
           }
 

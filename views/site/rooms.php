@@ -15,7 +15,7 @@ use Src\Route;
                 <span class="form_title">Вид</span>
                 <select class="form_input" required name="type_of_room">
                     <?php foreach($type_of_rooms as $type_of_room): ?>
-                        <option value="<?= $type_of_room->id ?>"><?= $type_of_room->type ?></option>
+                        <option value="<?= $type_of_room->id ?>"><?= $type_of_room->type?></option>
                     <?php endforeach; ?>
                 </select>
                 <span class="form_title">Подразделение</span>

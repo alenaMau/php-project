@@ -13,3 +13,5 @@ Route::add('subdivision', [Controller\Site::class, 'subdivision']);
 Route::add('phone', [Controller\Site::class, 'phone']);
 Route::add('manager', [Controller\Site::class, 'manager']);
 Route::add('manager_form', [Controller\Site::class, 'manager_form']);
+Route::add('attach_number', [Controller\Site::class, 'attach_number']);
+Route::add('abonent_all', [Controller\Site::class, 'abonent_all']);

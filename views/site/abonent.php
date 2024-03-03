@@ -28,6 +28,6 @@ use Src\Route;
         </form>
     </div>
     <div class="btn_other">
-        <button class="btn">Прикрепить номер</button>
+    <a class="btn" method="post" href="<?= Route::getUri('attach_number') ?>">Прикрепить номер</a>
     </div>
 </section>
