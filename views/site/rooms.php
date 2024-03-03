@@ -5,27 +5,24 @@ use Src\Route;
 ?>
 
 <section class="services">
+<h3><?= $message ?? ''; ?></h3>
     <div class="form_auth">
-    <span class="form_title-span">Добавление подразделения</span>
-        <form>
+    <span class="form_title-span">Добавление помещения</span>
+        <form method="post">
             <label>
                 <span class="form_title">Номер или название</span>
-                <input type="text" class="form_input" required placeholder="Номер или название" >
+                <input type="text" class="form_input" required placeholder="Номер или название" name="name">
                 <span class="form_title">Вид</span>
-                <select id="cities" class="form_input" required>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
+                <select class="form_input" required name="type_of_room">
+                    <?php foreach($type_of_rooms as $type_of_room): ?>
+                        <option value="<?= $type_of_room->id ?>"><?= $type_of_room->type ?></option>
+                    <?php endforeach; ?>
                 </select>
                 <span class="form_title">Подразделение</span>
-                <select id="cities" class="form_input" required>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
+                <select class="form_input" required name="id_subdivision">
+                    <?php foreach($subdivisions as $sub): ?>
+                        <option value="<?= $sub->id ?>"><?= $sub->name ?></option>
+                    <?php endforeach; ?>
                 </select>
                 <input type="submit" class="form_bth" Добавить>
             </label>

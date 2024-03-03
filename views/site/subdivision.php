@@ -1,17 +1,15 @@
 <section class="services">
     <div class="form_auth">
     <span class="form_title-span">Добавление подразделения</span>
-        <form>
+        <form method="post">
             <label>
                 <span class="form_title">Номер или название</span>
-                <input type="text" class="form_input" required placeholder="Номер или название" >
+                <input type="text" class="form_input" required placeholder="Номер или название" name = "name">
                 <span class="form_title">Вид</span>
-                <select id="cities" class="form_input" required>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
+                <select class="form_input" required name = "type_of_unit">
+                    <?php foreach($type_of_units as $type_of_unit): ?>
+                        <option value="<?= $type_of_unit->id ?>"><?= $type_of_unit->type ?></option>
+                    <?php endforeach; ?>
                 </select>   
                 <input type="submit" class="form_bth" Добавить>
             </label>
