@@ -15,20 +15,11 @@ use Src\Auth\Auth;
 use Model\Type_of_unit;
 use Model\AbonentTelepnone;
 use Throwable;
+use Src\Validator\Validator;
 use Illuminate\Support\Facades\DB;
 
 class Site
 {
-     // public function index(Request $request): string
-     // {
-     //      return(new View())->render('site.post');
-     // }
-
-     // public function hello(): string
-     // {
-     //      return new View('site.hello', ['message' => 'hello working']);
-     // }
-
      public function home(Request $request): string
      {
           $this->checkAccess();
@@ -62,17 +53,28 @@ class Site
 
      public function login(Request $request): string
      {
-          if ($request->method === 'GET') {
-               return new View('site.login');
-          }
-          if (Auth::attempt($request->all())) {
-               if (Auth::user()->id_rol === 1) {
-                    app()->route->redirect('manager');
-               } else {
-                    app()->route->redirect('home');
+          if ($request->method === 'POST') {
+               $validator = new Validator($request->all(), [
+                    'email' => ['required'],
+                    'password' => ['required'],
+               ], [
+                    'required' => 'Поле :field пусто',
+               ]);
+
+               if ($validator->fails()) {
+                    return new View('site.login',['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+               }
+
+               if (Auth::attempt($request->all())) {
+                    if (Auth::user()->id_rol === 1) {
+                         app()->route->redirect('manager');
+                    } else {
+                         app()->route->redirect('home');
+                    }
+                    return new View('site.login',['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
                }
           }
-          return new View('site.login', ['message' => 'Неправильные логин или пароль']);
+          return new View('site.login');
      }
 
      public function logout(): void
@@ -84,40 +86,60 @@ class Site
      public function rooms(Request $request): string
      {
           $this->checkAccess();
+          $type_of_rooms = Type_of_room::all();
+          $subdivisions = Subdivision::all();
 
           if ($request->method === 'POST') {
+               $validator = new Validator($request->all(), [
+                    'name' => ['required'],
+                    'type_of_room' => ['required'],
+                    'id_subdivision' => ['required'],
+               ], [
+                    'required' => 'Поле :field пусто',
+               ]);
+
+               if ($validator->fails()) {
+                    return new View('site.rooms',['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE), 'subdivisions' => $subdivisions, 'type_of_rooms' => $type_of_rooms]);
+               }
                $name = $request->get('name');
                $type_of_room = $request->get('type_of_room');
                $id_subdivision = $request->get('id_subdivision');
-               if (empty($name) || empty($type_of_room || empty($id_subdivision))) {
-                    ['message' => 'Пустые поля'];
-               }
+               
                $model = new Room();
                $model->name = $name;
                $model->id_type_of_room = $type_of_room;
                $model->id_subdivision = $id_subdivision;
                if ($model->save()) {
-                    return new View('site.rooms', ['message' => 'Успешно добавленно']);
+                    return new View('site.rooms', ['message' => 'Успешно добавленно', 'subdivisions' => $subdivisions, 'type_of_rooms' => $type_of_rooms]);
 
                }
           }
-          $type_of_rooms = Type_of_room::all();
-          $subdivisions = Subdivision::all();
           return new View('site.rooms', ['subdivisions' => $subdivisions, 'type_of_rooms' => $type_of_rooms]);
      }
 
      public function abonent(Request $request): string
      {
           $this->checkAccess();
+          $subdivisions = Subdivision::all();
           if ($request->method === 'POST') {
+               $validator = new Validator($request->all(), [
+                    'name' => ['required'],
+                    'surname' => ['required'],
+                    'patronymic' => ['required'],
+                    'date_of_birth' => ['required'],
+                    'id_subdivision' => ['required'],
+               ], [
+                    'required' => 'Поле :field пусто',
+               ]);
+
+               if ($validator->fails()) {
+                    return new View('site.abonent',['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE), 'subdivisions' => $subdivisions]);
+               }
                $name = $request->get('name');
                $surname = $request->get('surname');
                $patronymic = $request->get('patronymic');
                $date_of_birth = $request->get('date_of_birth');
                $id_subdivision = $request->get('id_subdivision');
-               if (empty($name) || empty($surname || empty($patronymic) || empty($date_of_birth) || empty($id_subdivision))) {
-                    ['message' => 'Пустые поля'];
-               }
                $model = new Abonent();
                $model->name = $name;
                $model->surname = $surname;
@@ -125,67 +147,72 @@ class Site
                $model->date_of_birth = $date_of_birth;
                $model->id_subdivision = $id_subdivision;
                if ($model->save()) {
-                    return new View('site.abonent', ['message' => 'Успешно добавленно']);
+                    return new View('site.abonent', ['message' => 'Успешно добавленно', 'subdivisions' => $subdivisions]);
 
                } else {
                     ['message' => ''];
                }
           }
-          $subdivisions = Subdivision::all();
           return new View('site.abonent', ['subdivisions' => $subdivisions]);
      }
 
      public function abonent_all(Request $request): string
-     {    
+     {
           $this->checkAccess();
           $exp = new Expression('subdivision.name, count(*) as total');
           $countAbonentSubdivision = Abonent::query()
-          ->select($exp)
-          ->join('subdivision', 'id_subdivision', '=', 'subdivision.id')
-          ->groupBy(['subdivision.name'])
-          ->get();
+               ->select($exp)
+               ->join('subdivision', 'id_subdivision', '=', 'subdivision.id')
+               ->groupBy(['subdivision.name'])
+               ->get();
 
           $expTwo = new Expression('room.name, count(*) as total');
           $countAbonentRoom = Abonent::query()
-          ->select($expTwo)
-          ->join('room', 'room.id_subdivision', '=', 'subscriber.id_subdivision')
-          ->groupBy(['room.name'])
-          ->get();
+               ->select($expTwo)
+               ->join('room', 'room.id_subdivision', '=', 'subscriber.id_subdivision')
+               ->groupBy(['room.name'])
+               ->get();
 
           $abonents = Abonent::all();
           $type_of_units = Type_of_unit::all();
           return new View('site.abonent_all', ['abonents' => $abonents, 'subdivisions' => $countAbonentSubdivision, 'rooms' => $countAbonentRoom, 'type_of_units' => $type_of_units]);
      }
 
+
+     public function abonent_list(Request $request): string
+     {
+          $this->checkAccess();
+
+          $abonents = AbonentTelepnone::all();
+          return new View('site.abonent_list', ['abonents' => $abonents]);
+     }
+
      public function subdivision(Request $request): string
      {
-          $exp = new Expression('subdivision.name, count(*) as total');
-          $countAbonentSubdivision = Abonent::query()
-          ->select($exp)
-          ->join('subdivision', 'id_subdivision', '=', 'subdivision.id')
-          ->groupBy(['subdivision.name'])
-          ->get();
-
-          $expTwo = new Expression('room.name, count(*) as total');
-          $countAbonentRoom = Abonent::query()
-          ->select($expTwo)
-          ->join('room', 'room.id_subdivision', '=', 'subscriber.id_subdivision')
-          ->groupBy(['room.name'])
-          ->get();
 
           $this->checkAccess();
+          $abonents = Abonent::all();
+          $type_of_units = Type_of_unit::all();
+
           if ($request->method === 'POST') {
+               
+               $validator = new Validator($request->all(), [
+                    'name' => ['required'],
+                    'type_of_unit' => ['required'],
+               ], [
+                    'required' => 'Поле :field пусто',
+               ]);
+     
+               if ($validator->fails()) {
+                    return new View('site.subdivision',['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE), 'abonents' => $abonents, 'type_of_units' => $type_of_units]);
+               }
                $name = $request->get('name');
                $type_of_unit = $request->get('type_of_unit');
-               if (empty($name) || empty($type_of_unit)) {
-                    ['message' => 'Пустые поля'];
-               }
                $model = new Subdivision();
                $model->name = $name;
                $model->id_type_of_unit = $type_of_unit;
                if ($model->save()) {
-                    return new View('site.subdivision', ['message' => 'Успешно добавленно']);
-
+                    return new View('site.subdivision', ['message' => 'Успешно добавленно', 'abonents' => $abonents, 'type_of_units' => $type_of_units]);
                }
           }
 
@@ -204,33 +231,40 @@ class Site
           } else {
                ['message' => 'нету'];
           }
-          $abonents = Abonent::all();
-          $type_of_units = Type_of_unit::all();
-          return new View('site.subdivision', ['abonents' => $abonents, 'subdivisions' => $countAbonentSubdivision, 'rooms' => $countAbonentRoom, 'type_of_units' => $type_of_units]);
+          return new View('site.subdivision', ['abonents' => $abonents, 'type_of_units' => $type_of_units]);
      }
 
 
      public function phone(Request $request): string
      {
           $this->checkAccess();
+          $subdivisions = Subdivision::all();
+          $rooms = Room::all();
+
           if ($request->method === 'POST') {
+               $validator = new Validator($request->all(), [
+                    'number_telephone' => ['required'],
+                    'room' => ['required'],
+                    'subdivision' => ['required'],
+               ], [
+                    'required' => 'Поле :field пусто',
+               ]);
+     
+               if ($validator->fails()) {
+                    return new View('site.phone',['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE), 'subdivisions' => $subdivisions, 'rooms' => $rooms]);
+               }
                $telNumber = $request->get('number_telephone');
                $room = $request->get('room');
                $subdivision = $request->get('subdivision');
-               if (empty($room) || empty($telNumber || empty($subdivision))) {
-                    ['message' => 'Пустые поля'];
-               }
                $model = new Telephone();
                $model->number_telephone = $telNumber;
                $model->id_room = $room;
                $model->id_subdivision = $subdivision;
                if ($model->save()) {
-                    return new View('site.phone', ['message' => 'Успешно добавленно']);
+                    return new View('site.phone', ['message' => 'Успешно добавленно', 'subdivisions' => $subdivisions, 'rooms' => $rooms]);
 
                }
           }
-          $subdivisions = Subdivision::all();
-          $rooms = Room::all();
           return new View('site.phone', ['subdivisions' => $subdivisions, 'rooms' => $rooms]);
      }
 
@@ -241,15 +275,38 @@ class Site
           return new View('site.manager');
      }
 
+     public function search(): string
+     {
+          $this->checkAccess(true);
+
+          $searchName = $_POST['abonent'] ?? '';
+          if (!empty($searchName)) {
+               $searchName = $searchName[0];
+               $abonents = Abonent::where('name', 'LIKE', "%$searchName%")->orWhere('surname', 'LIKE', "%$searchName%")->orWhere('patronymic', 'LIKE', "%$searchName%")->get();
+          } else {
+               $abonents = Abonent::all();
+          }
+
+          return new View('site.search', ['abonents' => $abonents]);
+     }
+
      public function manager_form(Request $request): string
      {
           $this->checkAccess(true);
+
           if ($request->method === 'POST') {
+               $validator = new Validator($request->all(), [
+                    'email' => ['required'],
+                    'password' => ['required'],
+               ], [
+                    'required' => 'Поле :field пусто',
+               ]);
                $email = $request->get('email');
                $password = $request->get('password');
-               if (empty($email) || empty($password)) {
-                    die(['message' => 'Пустые поля']);
-               }
+
+          if ($validator->fails()) {
+               return new View('site.phone',['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+          }
                $model = new User();
                $model->email = $email;
                $model->password = md5($password);
@@ -259,7 +316,6 @@ class Site
 
                }
           }
-
           return new View('site.manager_form');
      }
 

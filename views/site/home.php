@@ -10,5 +10,7 @@ use Src\Route;
     <a class="btn" href="<?= Route::getUri('rooms') ?>">Добавление помещения</a>
     <a class="btn" href="<?= Route::getUri('subdivision') ?>">Добавление подразделения</a>
     <a class="btn" href="<?= Route::getUri('phone') ?>">Добавление телефона</a>
-    <a class="btn" method="post" href="<?= Route::getUri('attach_number') ?>">Выбрать все абоненты</a>
+    <a class="btn" href="<?= Route::getUri('abonent_list') ?>">Все абоненты</a>
+    <a class="btn" href="<?= Route::getUri('attach_number') ?>">Прикрепить номер</a>
+    <a class="btn" href="<?= Route::getUri('search') ?>">Поиск абонента по имени</a>
 </section>

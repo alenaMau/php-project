@@ -15,3 +15,5 @@ Route::add('manager', [Controller\Site::class, 'manager']);
 Route::add('manager_form', [Controller\Site::class, 'manager_form']);
 Route::add('attach_number', [Controller\Site::class, 'attach_number']);
 Route::add('abonent_all', [Controller\Site::class, 'abonent_all']);
+Route::add('search', [Controller\Site::class, 'search']);
+Route::add('abonent_list', [Controller\Site::class, 'abonent_list']);
