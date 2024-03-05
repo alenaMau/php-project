@@ -1,7 +1,5 @@
 <?php
 
-use Src\Route;
-
 ?>
 
 <section class="services">
@@ -26,7 +24,7 @@ use Src\Route;
     </div>
     <div class="btn_other">
         <button class="btn">Выбрать по абоненту</button>
-        <a class="btn" href="<?= Route::getUri('abonent_all') ?>">Количество абонентов по подразделению</a>
+        <a class="btn" href="<?= app()->route->getUrl('abonent_all') ?>">Количество абонентов по подразделению</a>
         <!-- <h3>
             <?= $message ?? ''; ?>
         </h3>

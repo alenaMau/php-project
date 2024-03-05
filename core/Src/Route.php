@@ -25,6 +25,7 @@ class Route
     private function __construct()
     {
         $this->routeCollector = new RouteCollector(new Std(), new MarkBased());
+
     }
 
     public static function add($httpMethod, string $route, array $action): self
@@ -54,18 +55,7 @@ class Route
 
     public function getUrl(string $url): string
     {
-        return $this->prefix . $url;
-    }
-
-    public static function getUri(string $uri)
-    {
-        $url = '/' . $uri;
-        $routes = self::single()->routeCollector->processedRoutes();
-        if (empty($routes[0]['GET'][$url]) && empty($routes[0]['POST'][$url])) {
-            return '/';
-        }
-
-        return $url;
+        return $this->prefix.'/'.$url;
     }
 
     public function setPrefix(string $value = ''): self

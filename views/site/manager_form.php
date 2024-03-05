@@ -1,10 +1,9 @@
 <?php
 
-use Src\Route;
 
 ?>
 
-<a class="url-logout" href="<?= Route::getUri('logout') ?>">Выйти</a>
+<a class="url-logout" href="<?= app()->route->getUrl('logout') ?>">Выйти</a>
 <section class="auth">
    <div class="form_auth">
    <span class="form_title-span">Добавление <br>системного администратора</span>

@@ -1,6 +1,5 @@
 <?php
 
-use Src\Route;
 
 ?>
 
@@ -29,6 +28,6 @@ use Src\Route;
         </form>
     </div>
     <div class="btn_other">
-    <a class="btn" method="post" href="<?= Route::getUri('attach_number') ?>">Прикрепить номер</a>
+    <a class="btn" method="post" href="<?= app()->route->getUrl('attach_number') ?>">Прикрепить номер</a>
     </div>
 </section>
