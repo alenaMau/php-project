@@ -19,5 +19,4 @@ class Abonent extends Model
         'date_of_birth',
         'id_subdivision'
     ];
-
 }

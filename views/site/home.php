@@ -1,7 +1,7 @@
 <?php
 
 use Src\Route;
-
+Route::getUri('abonent_list');
 ?>
 
 <a class="url-logout" href="<?= Route::getUri('logout') ?>">Выйти с Учётной записи</a>
