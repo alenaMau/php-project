@@ -62,7 +62,7 @@ class Site
                ]);
 
                if ($validator->fails()) {
-                    return new View('site.login',['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+                    return new View('site.login', ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
                }
 
                if (Auth::attempt($request->all())) {
@@ -71,7 +71,7 @@ class Site
                     } else {
                          app()->route->redirect('home');
                     }
-                    return new View('site.login',['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+                    return new View('site.login', ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
                }
           }
           return new View('site.login');
@@ -94,21 +94,32 @@ class Site
                     'name' => ['required'],
                     'type_of_room' => ['required'],
                     'id_subdivision' => ['required'],
+                    'file' => ['required'],
                ], [
                     'required' => 'Поле :field пусто',
                ]);
 
                if ($validator->fails()) {
-                    return new View('site.rooms',['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE), 'subdivisions' => $subdivisions, 'type_of_rooms' => $type_of_rooms]);
+                    return new View('site.rooms', ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE), 'subdivisions' => $subdivisions, 'type_of_rooms' => $type_of_rooms]);
                }
                $name = $request->get('name');
                $type_of_room = $request->get('type_of_room');
                $id_subdivision = $request->get('id_subdivision');
-               
+
+               $uploadDirectory = 'images/';
+               if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+                    $file = $_FILES['file'];
+                    $filename = $uploadDirectory . basename($file['name']);
+                    if (!move_uploaded_file($file['tmp_name'], $filename)) {
+                         return new View('site.rooms', ['message' => 'Не удалось загрузить файл', 'subdivisions' => $subdivisions, 'type_of_rooms' => $type_of_rooms]);
+                    }
+               }
+
                $model = new Room();
                $model->name = $name;
                $model->id_type_of_room = $type_of_room;
                $model->id_subdivision = $id_subdivision;
+               $model->image = $filename;
                if ($model->save()) {
                     return new View('site.rooms', ['message' => 'Успешно добавленно', 'subdivisions' => $subdivisions, 'type_of_rooms' => $type_of_rooms]);
 
@@ -133,7 +144,7 @@ class Site
                ]);
 
                if ($validator->fails()) {
-                    return new View('site.abonent',['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE), 'subdivisions' => $subdivisions]);
+                    return new View('site.abonent', ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE), 'subdivisions' => $subdivisions]);
                }
                $name = $request->get('name');
                $surname = $request->get('surname');
@@ -195,16 +206,16 @@ class Site
           $type_of_units = Type_of_unit::all();
 
           if ($request->method === 'POST') {
-               
+
                $validator = new Validator($request->all(), [
                     'name' => ['required'],
                     'type_of_unit' => ['required'],
                ], [
                     'required' => 'Поле :field пусто',
                ]);
-     
+
                if ($validator->fails()) {
-                    return new View('site.subdivision',['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE), 'abonents' => $abonents, 'type_of_units' => $type_of_units]);
+                    return new View('site.subdivision', ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE), 'abonents' => $abonents, 'type_of_units' => $type_of_units]);
                }
                $name = $request->get('name');
                $type_of_unit = $request->get('type_of_unit');
@@ -243,15 +254,16 @@ class Site
 
           if ($request->method === 'POST') {
                $validator = new Validator($request->all(), [
-                    'number_telephone' => ['required'],
+                    'number_telephone' => ['required', 'number'],
                     'room' => ['required'],
                     'subdivision' => ['required'],
                ], [
                     'required' => 'Поле :field пусто',
+                    'number' => 'Поле :field только номераа',
                ]);
-     
+
                if ($validator->fails()) {
-                    return new View('site.phone',['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE), 'subdivisions' => $subdivisions, 'rooms' => $rooms]);
+                    return new View('site.phone', ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE), 'subdivisions' => $subdivisions, 'rooms' => $rooms]);
                }
                $telNumber = $request->get('number_telephone');
                $room = $request->get('room');
@@ -304,9 +316,9 @@ class Site
                $email = $request->get('email');
                $password = $request->get('password');
 
-          if ($validator->fails()) {
-               return new View('site.phone',['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
-          }
+               if ($validator->fails()) {
+                    return new View('site.phone', ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+               }
                $model = new User();
                $model->email = $email;
                $model->password = md5($password);
@@ -317,6 +329,16 @@ class Site
                }
           }
           return new View('site.manager_form');
+     }
+
+ 
+
+     public function room_all(Request $request): string
+     {
+          $this->checkAccess(true);
+          $rooms = Room::all();
+
+          return new View('site.room_all',['rooms' => $rooms,]);
      }
 
      private function checkAccess(bool $isCheckModerator = false): void

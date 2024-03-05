@@ -15,7 +15,8 @@ class Room extends Model
     protected $fillable = [
         'name',
         'id_type_of_room',
-        'id_subdivision'
+        'id_subdivision',
+        'image'
     ];
 
 }

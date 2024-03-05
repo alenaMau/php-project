@@ -158,6 +158,19 @@ header {
 }
 
 
+.services_rooms {
+    display: table;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 15px;
+    flex-direction: row;
+    max-width: 100%;
+    align-items: center;
+    justify-content: center;
+    height: 1055px;
+}
+
+
 
 footer {
     min-width: 1440px;
@@ -165,6 +178,10 @@ footer {
     background-color: #A0A0A0;
     border-radius: 15px;
     position: relative; bottom: 0; left: 0;
+}
+
+img {
+    width: 300px;
 }
 
 /*section {*/

@@ -17,3 +17,4 @@ Route::add('GET','/attach_number', [Controller\Site::class, 'attach_number']);
 Route::add('GET','/abonent_all', [Controller\Site::class, 'abonent_all']);
 Route::add(['GET', 'POST'],'/search', [Controller\Site::class, 'search']);
 Route::add('GET','/abonent_list', [Controller\Site::class, 'abonent_list']);
+Route::add('GET','/room_all', [Controller\Site::class, 'room_all']);

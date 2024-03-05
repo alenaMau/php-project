@@ -11,4 +11,5 @@
     <a class="btn" href="<?= app()->route->getUrl('abonent_list') ?>">Все абоненты</a>
     <a class="btn" href="<?= app()->route->getUrl('attach_number') ?>">Прикрепить номер</a>
     <a class="btn" href="<?= app()->route->getUrl('search') ?>">Поиск абонента по имени</a>
-</section>
+    <a class="btn" href="<?= app()->route->getUrl('room_all') ?>">Все комнаты</a>
+</section> 
