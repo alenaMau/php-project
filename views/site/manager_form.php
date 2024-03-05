@@ -2,7 +2,7 @@
 
 
 ?>
-
+<a href="#" onclick="history.back();return false;" class="history-back">Вернуться назад</a>
 <a class="url-logout" href="<?= app()->route->getUrl('logout') ?>">Выйти</a>
 <section class="auth">
    <div class="form_auth">

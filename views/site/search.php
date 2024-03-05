@@ -2,6 +2,7 @@
 
 
 ?>
+<a href="#" onclick="history.back();return false;" class="history-back">Вернуться назад</a>
 
 <section class="services_search">
     <div class="form"> 

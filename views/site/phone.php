@@ -1,3 +1,5 @@
+<a href="#" onclick="history.back();return false;" class="history-back">Вернуться назад</a>
+
 <section class="services">
 <h3><?= $message ?? ''; ?></h3>
     <div class="form_auth">

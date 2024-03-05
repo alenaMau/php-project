@@ -21,7 +21,7 @@ h2 {
 }
 
 .form_title_black {
-    color: black    ;
+    color: black;
     font-size: 28px;
 }
 
@@ -40,12 +40,13 @@ h2 {
 .form {
     width: 514px;
     min-height: 540px;  
-    max-height: 650px;
+    min-height: 670px;
+    display: table-row;
     border-radius: 20px;
-    display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    display: table;
 }
 
 
@@ -81,7 +82,6 @@ h2 {
     max-width: 100%;
     align-items: center;
     justify-content: center;
-    height: 1190px;
 }
 
 .auth {
