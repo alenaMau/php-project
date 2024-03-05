@@ -2,6 +2,9 @@
 <h3><?= $message ?? ''; ?></h3>
 <h3><?= app()->auth->user()->name ?? ''; ?></h3>
 <?php
+
+//var_dump(app()->settings->path['root']);
+
 if (!app()->auth::check()):
    ?>
    <div class="form_auth">
