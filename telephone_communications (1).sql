@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Мар 05 2024 г., 05:31
+-- Время создания: Мар 06 2024 г., 03:46
 -- Версия сервера: 10.4.32-MariaDB
 -- Версия PHP: 8.2.12
 
@@ -72,16 +72,19 @@ CREATE TABLE `room` (
   `id` int(11) NOT NULL,
   `id_type_of_room` int(11) NOT NULL,
   `name` varchar(225) NOT NULL,
-  `id_subdivision` int(11) NOT NULL
+  `id_subdivision` int(11) NOT NULL,
+  `image` varchar(225) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Дамп данных таблицы `room`
 --
 
-INSERT INTO `room` (`id`, `id_type_of_room`, `name`, `id_subdivision`) VALUES
-(1, 1, 'room_1', 9),
-(2, 1, 'romantic', 9);
+INSERT INTO `room` (`id`, `id_type_of_room`, `name`, `id_subdivision`, `image`) VALUES
+(1, 1, 'room_1', 9, '0'),
+(2, 1, 'romantic', 9, '0'),
+(3, 1, 'asdasdasokok', 9, 'images/Microsoft Visio Drawing.png'),
+(4, 1, 'asdasdasloplkopl', 9, 'images/Microsoft Visio Drawing.png');
 
 -- --------------------------------------------------------
 
@@ -128,7 +131,10 @@ INSERT INTO `subscriber` (`id`, `surname`, `name`, `patronymic`, `date_of_birth`
 (3, 'Губарь', 'Таня', 'По батюшке не знаю', '13.05.2004', 9),
 (4, 'saddasads', 'adssdaasd', 'adsadsasdsda', 'adsadsads', 11),
 (5, 'Корчагина', 'Алина', 'Алексеевна', '8.05.2002', 11),
-(11, 'Мамуров', 'Сабир', 'Жамалович', '4.10.2004', 11);
+(11, 'Мамуров', 'Сабир', 'Жамалович', '4.10.2004', 11),
+(12, 'Серебрекова', 'Саша', 'Не знаю', '14.08.2000', 11),
+(13, 'Саня', 'Саня', 'Саня', '54.06.2004', 10),
+(14, 'что делать', 'Что делать', 'что делать', '15.06.2004', 11);
 
 -- --------------------------------------------------------
 
@@ -239,7 +245,8 @@ ALTER TABLE `room`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_id_subdivision` (`id_subdivision`),
   ADD KEY `id_subdivision` (`id_subdivision`),
-  ADD KEY `id_type_of_room` (`id_type_of_room`);
+  ADD KEY `id_type_of_room` (`id_type_of_room`),
+  ADD KEY `id_image` (`image`);
 
 --
 -- Индексы таблицы `subdivision`
@@ -301,7 +308,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT для таблицы `room`
 --
 ALTER TABLE `room`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT для таблицы `subdivision`
@@ -313,7 +320,7 @@ ALTER TABLE `subdivision`
 -- AUTO_INCREMENT для таблицы `subscriber`
 --
 ALTER TABLE `subscriber`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT для таблицы `telephone`
