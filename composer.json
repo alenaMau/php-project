@@ -4,7 +4,7 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "AlenaMau", 
+            "name": "AlenaMau",
             "email": "alenamau3486@gmail.com"
         }
     ],
@@ -13,10 +13,11 @@
         "php": "^7.4 | ^8.0",
         "illuminate/database": "10.x-dev",
         "illuminate/events": "10.x-dev",
-        "nikic/fast-route": "^2.0@dev"
-     
-     },
-     "autoload": {
+        "nikic/fast-route": "^2.0@dev",
+        "alenamau/collect": "dev-main",
+        "alenamau/validator": "dev-main"
+    },
+    "autoload": {
         "psr-4": {
             "Src\\": "core/Src/",
             "": "app/"

@@ -2,7 +2,7 @@
 
 namespace Validators;
 
-use Validator\AbstractValidator;
+use Src\Validator\AbstractValidator;
 
 class ImageValidator extends AbstractValidator
 {

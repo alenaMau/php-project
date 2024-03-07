@@ -65,8 +65,6 @@ class Middleware
         return $request;
     }
 
-
-
     //Поиск middlewares по адресу
     private function getMiddlewaresForRoute(string $httpMethod, string $uri): array
     {
