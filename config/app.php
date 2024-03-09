@@ -1,15 +1,18 @@
 <?php
 use Middlewares\AuthMiddleware;
 use Middlewares\CSRFMiddleware;
+use Validator\ConcrectValodators\UniqueValidator;
+use Validator\metog\NumberValidator;
+use Validator\metog\RequireValidator;
 return [
    'auth' => \Src\Auth\Auth::class,
 
    'identity' => \Model\User::class,
 
    'validators' => [
-      'required' => \Validators\RequireValidator::class,
-      'unique' => \Validators\UniqueValidator::class,
-      'number' => \Validators\NumberValidator::class,
+      'required' => RequireValidator::class,
+      'unique' => UniqueValidator::class,
+      'number' => NumberValidator::class,
    ],
 
    'routeMiddleware' => [

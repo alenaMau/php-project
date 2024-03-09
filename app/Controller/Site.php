@@ -15,8 +15,7 @@ use Src\Auth\Auth;
 use Model\Type_of_unit;
 use Model\AbonentTelepnone;
 use Throwable;
-use Src\Validator\Validator;
-use Illuminate\Support\Facades\DB;
+use Validator\Validator;
 
 class Site
 {
